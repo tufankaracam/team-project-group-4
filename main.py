@@ -5,6 +5,7 @@ from record import Record
 import os
 import platform
 
+
 def clear_console():
 
     system = platform.system()
@@ -13,6 +14,7 @@ def clear_console():
         os.system('cls')
     else:
         os.system('clear')
+
 
 def input_error(func):
     def inner(*args, **kwargs):
@@ -90,6 +92,26 @@ def birthdays(contacts: AddressBook):
     return contacts.get_birthdays_per_week()
 
 
+def add_address(args, contacts: AddressBook):
+    try:
+        name = args[0]
+        address = (" ").join(args[1:]).title()
+        if not address.strip():
+            raise ValueError
+        contact = contacts.find(name)
+        contact.add_address(address)
+        contacts.save_records()
+        return 'Address added.'
+    except ValueError:
+        return 'You need to give name and address (minimum 1 word).'
+
+
+def show_address(args, contacts: AddressBook):
+    name = args[0]
+    contact = contacts.find(name)
+    return contact.show_address()
+
+
 def parseCommands(input):
     if input == '':
         return '', []
@@ -111,6 +133,8 @@ def main():
         'add-birthday': add_birthday,
         'show-birthday': show_birthday,
         'birthdays': birthdays,
+        'add-address': add_address,
+        'show-address': show_address,
 
     }
 

@@ -1,6 +1,8 @@
 from birthday import Birthday
 from name import Name
 from phone import Phone, PhoneFormatError
+from address import Address
+
 
 class Record:
     def __init__(self, name):
@@ -11,7 +13,7 @@ class Record:
         self.birthday = Birthday(value)
 
     def show_birthday(self):
-        if self.birthday is not None:
+        if hasattr(self, 'birthday') and self.birthday is not None:
             return self.birthday.value.strftime('%d-%m-%Y')
         else:
             return 'Birthday info not found.'
@@ -51,6 +53,15 @@ class Record:
             if p.value == phone.value:
                 return p.value
         return 'Phone number not found.'
+
+    def add_address(self, value):
+        self.address = Address(value)
+
+    def show_address(self):
+        if hasattr(self, 'address') and self.address is not None:
+            return self.address.value
+        else:
+            return 'Address info not found.'
 
     def __str__(self):
         return f'''Contact name: {self.name.value}, phones: {'; '.join([p.value for p in self.phones])}'''

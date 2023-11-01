@@ -49,14 +49,9 @@ def change_contact(args, contacts: AddressBook):
     try:
         name, phone1, phone2 = args
         contact = contacts.find(name)
-        contact.edit_phone(phone1, phone2)
-        for phone in contact.phones:
-            phone1 = Phone(phone1)
-            if phone1.value == phone.value:
-                phone.value = phone2
-                contacts.save_records()
-                return "Phone number updated."
-            return "Phone number not found."
+        result = contact.edit_phone(phone1, phone2)
+        contacts.save_records()
+        return result
     except PhoneFormatError as e:
         return e
 
@@ -92,8 +87,14 @@ def show_birthday(args, contacts: AddressBook):
     return contact.show_birthday()
 
 
-def birthdays(contacts: AddressBook):
-    return contacts.get_birthdays_per_week()
+def birthdays(args, contacts: AddressBook):
+    try:
+        count_days = int(args[0])
+        return contacts.get_birthdays_for_days(count_days)
+    except ValueError:
+        return 'You need to give number of days.'
+    except IndexError:
+        return 'You need to give number of days.'
 
 
 def add_address(args, contacts: AddressBook):
@@ -114,6 +115,9 @@ def show_address(args, contacts: AddressBook):
     name = args[0]
     contact = contacts.find(name)
     return contact.show_address()
+
+def search(args, contacts: AddressBook):
+    return contacts.search(args[0].strip())
 
 
 def add_note(args, notes: Notebook):
@@ -164,7 +168,8 @@ def main():
         'birthdays': {'name': birthdays, 'obj': contacts},
         'add-address': {'name': add_address, 'obj': contacts},
         'show-address': {'name': show_address, 'obj': contacts},
-
+        'search': { 'name': search, 'obj': contacts},
+      
         'add-note': {'name': add_note, 'obj': notes},
         'update-note': {'name': update_note, 'obj': notes},
         'search-note': {'name': search_note, 'obj': notes},

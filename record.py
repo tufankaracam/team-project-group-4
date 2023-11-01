@@ -14,7 +14,7 @@ class Record:
 
     def show_birthday(self):
         if hasattr(self, 'birthday') and self.birthday is not None:
-            return self.birthday.value.strftime('%d-%m-%Y')
+            return self.birthday.value.strftime('%d.%m.%Y')
         else:
             return 'Birthday info not found.'
 

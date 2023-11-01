@@ -2,8 +2,10 @@ from collections import UserDict
 from datetime import datetime, timedelta
 from name import Name
 from record import Record
+from collections import defaultdict, UserDict, OrderedDict
 import os
 import pickle
+
 
 class AddressBook(UserDict):
 
@@ -64,6 +66,24 @@ class AddressBook(UserDict):
                         birthdays[birthday.strftime('%A')].append(
                             self.data[user].name.value)
         return "\n".join([f'{k}: {", ".join(v)}' for k, v in birthdays.items() if len(v) > 0])
+
+    def get_birthdays_for_days(self, count_days: int):
+        birthdays_dict = defaultdict(list)
+        now = datetime.now().date()
+        for user in self.data:
+            if hasattr(self.data[user], 'birthday'):
+                birthday = datetime(
+                    now.year, self.data[user].birthday.value.month, self.data[user].birthday.value.day).date()
+                delta_days = (birthday - now).days
+                if delta_days in range(0, count_days):
+                    birthdays_dict[birthday].append(user)
+        o_birthdays_dict = OrderedDict(sorted(birthdays_dict.items()))
+        if len(o_birthdays_dict) > 0:
+            res_str = "\n".join(
+                [f'{k}: {", ".join(v)}' for k, v in o_birthdays_dict.items()])
+        else:
+            res_str = f"No birthdays in the next {count_days} days."
+        return res_str
     
     def search(self, query):
         if len(self.data) == 0:

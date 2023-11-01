@@ -86,8 +86,14 @@ def show_birthday(args, contacts: AddressBook):
     return contact.show_birthday()
 
 
-def birthdays(contacts: AddressBook):
-    return contacts.get_birthdays_per_week()
+def birthdays(args, contacts: AddressBook):
+    try:
+        count_days = int(args[0])
+        return contacts.get_birthdays_for_days(count_days)
+    except ValueError:
+        return 'You need to give number of days.'
+    except IndexError:
+        return 'You need to give number of days.'
 
 
 def add_address(args, contacts: AddressBook):
@@ -133,9 +139,9 @@ def main():
         'all': {'name': show_all, 'args': False},
         'add-birthday': {'name': add_birthday, 'args': True},
         'show-birthday': {'name': show_birthday, 'args': True},
-        'birthdays': {'name': birthdays, 'args': False},
-        'add-address': { 'name': add_address, 'args': True},
-        'show-address': { 'name': show_address, 'args': True},
+        'birthdays': {'name': birthdays, 'args': True},
+        'add-address': {'name': add_address, 'args': True},
+        'show-address': {'name': show_address, 'args': True},
         'search': { 'name': search, 'args': True},
     }
 

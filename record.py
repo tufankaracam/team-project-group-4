@@ -2,6 +2,7 @@ from birthday import Birthday
 from name import Name
 from phone import Phone, PhoneFormatError
 from address import Address
+from ct_email import Email
 
 
 class Record:
@@ -62,6 +63,15 @@ class Record:
             return self.address.value
         else:
             return 'Address info not found.'
+
+    def add_email(self, value):
+        self.email = Email(value)
+
+    def show_email(self):
+        if hasattr(self, 'email') and self.email is not None:
+            return self.email.value
+        else:
+            return 'Email info not found.'
 
     def __str__(self):
         return f'''Contact name: {self.name.value}, phones: {'; '.join([p.value for p in self.phones])}'''

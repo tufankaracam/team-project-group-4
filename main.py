@@ -2,7 +2,8 @@ from address_book import AddressBook
 from birthday import BirthdayFormatError, BirthdayValueError
 from phone import Phone, PhoneFormatError
 from record import Record
-from address import Address, AddressFormatError
+from address import Address, AddressFormatError, AddressEmptyError
+from ct_email import Email, EmailFormatError
 import os
 import platform
 
@@ -62,7 +63,12 @@ def show_phone(args, contacts: AddressBook):
 
 
 def show_all(contacts: AddressBook):
-    return '\n'.join([f'{k} ({v.birthday.value.strftime("%d.%m.%Y") if hasattr(v,"birthday") else "No Birthday"}): { ", ".join([phone.value for phone in v.phones])}' for k, v in contacts.items()])
+    if len(contacts) == 0:
+        res = 'No contacts yet.'
+    else:
+        res = '\n'.join(
+            [f'{k} ({v.birthday.value.strftime("%d.%m.%Y") if hasattr(v,"birthday") else "No Birthday"}): { ", ".join([phone.value for phone in v.phones])}' for k, v in contacts.items()])
+    return res
 
 
 def add_birthday(args, contacts: AddressBook):
@@ -77,13 +83,20 @@ def add_birthday(args, contacts: AddressBook):
     except BirthdayValueError as e:
         return e
     except ValueError:
-        return 'You need to give name and birthday #dd.mm.yyyy'
+        return 'You need to give name and birthday.'
+    except KeyError:
+        return 'Contact not found.'
 
 
 def show_birthday(args, contacts: AddressBook):
-    name = args[0]
-    contact = contacts.find(name)
-    return contact.show_birthday()
+    try:
+        name = args[0]
+        contact = contacts.find(name)
+        return contact.show_birthday()
+    except IndexError:
+        return 'You need to give name.'
+    except KeyError:
+        return 'Contact not found.'
 
 
 def birthdays(args, contacts: AddressBook):
@@ -98,25 +111,61 @@ def birthdays(args, contacts: AddressBook):
 
 def add_address(args, contacts: AddressBook):
     try:
-        name = args[0]
-        address = (" ").join(args[1:]).title()
+        name, address = args[0], args[1:]
+        address_str = (" ").join(address).title()
         contact = contacts.find(name)
-        contact.add_address(address)
+        contact.add_address(address_str)
         contacts.save_records()
         return 'Address added.'
     except AddressFormatError as e:
         return e
-    except ValueError:
+    except AddressEmptyError as e:
+        return e
+    except IndexError:
         return 'You need to give name and address.'
+    except KeyError:
+        return 'Contact not found.'
 
 
 def show_address(args, contacts: AddressBook):
-    name = args[0]
-    contact = contacts.find(name)
-    return contact.show_address()
+    try:
+        name = args[0]
+        contact = contacts.find(name)
+        return contact.show_address()
+    except IndexError:
+        return 'You need to give name.'
+    except KeyError:
+        return 'Contact not found.'
+
 
 def search(args, contacts: AddressBook):
     return contacts.search(args[0].strip())
+
+
+def add_email(args, contacts: AddressBook):
+    try:
+        name, email = args
+        contact = contacts.find(name)
+        contact.add_email(email)
+        contacts.save_records()
+        return 'Email added.'
+    except EmailFormatError as e:
+        return e
+    except ValueError:
+        return 'You need to give name and email.'
+    except KeyError:
+        return 'Contact not found.'
+
+
+def show_email(args, contacts: AddressBook):
+    try:
+        name = args[0]
+        contact = contacts.find(name)
+        return contact.show_email()
+    except IndexError:
+        return 'You need to give name.'
+    except KeyError:
+        return 'Contact not found.'
 
 
 def parseCommands(input):
@@ -142,7 +191,9 @@ def main():
         'birthdays': {'name': birthdays, 'args': True},
         'add-address': {'name': add_address, 'args': True},
         'show-address': {'name': show_address, 'args': True},
-        'search': { 'name': search, 'args': True},
+        'search': {'name': search, 'args': True},
+        'add-email': {'name': add_email, 'args': True},
+        'show-email': {'name': show_email, 'args': True},
     }
 
     while (True):

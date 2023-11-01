@@ -77,6 +77,5 @@ class AddressBook(UserDict):
                 delta_days = (birthday - now).days
                 if delta_days in range(0, count_days):
                     birthdays_dict[birthday].append(user)
-            o_birthdays_dict = OrderedDict(
-                sorted(birthdays_dict.items()))
+        o_birthdays_dict = OrderedDict(sorted(birthdays_dict.items()))
         return "\n".join([f'{k}: {", ".join(v)}' for k, v in o_birthdays_dict.items() if len(v) > 0])

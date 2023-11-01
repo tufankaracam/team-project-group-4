@@ -109,6 +109,9 @@ def show_address(args, contacts: AddressBook):
     contact = contacts.find(name)
     return contact.show_address()
 
+def search(args, contacts: AddressBook):
+    return contacts.search(args[0].strip())
+
 
 def parseCommands(input):
     if input == '':
@@ -133,6 +136,7 @@ def main():
         'birthdays': {'name': birthdays, 'args': False},
         'add-address': { 'name': add_address, 'args': True},
         'show-address': { 'name': show_address, 'args': True},
+        'search': { 'name': search, 'args': True},
     }
 
     while (True):

@@ -2,6 +2,7 @@ from address_book import AddressBook
 from birthday import BirthdayFormatError
 from phone import Phone, PhoneFormatError
 from record import Record
+from address import Address, AddressFormatError
 import os
 import platform
 
@@ -96,14 +97,14 @@ def add_address(args, contacts: AddressBook):
     try:
         name = args[0]
         address = (" ").join(args[1:]).title()
-        if not address.strip():
-            raise ValueError
         contact = contacts.find(name)
         contact.add_address(address)
         contacts.save_records()
         return 'Address added.'
+    except AddressFormatError as e:
+        return e
     except ValueError:
-        return 'You need to give name and address (minimum 1 word).'
+        return 'You need to give name and address.'
 
 
 def show_address(args, contacts: AddressBook):

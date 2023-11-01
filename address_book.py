@@ -94,7 +94,7 @@ class AddressBook(UserDict):
 
         result = ''
         for name, info in self.data.items():
-            address = info.address.value.lower() if info.address.value else None
+            address = info.address.value.lower() if hasattr(info, 'address') else None
             phones = ' '.join([p.value for p in info.phones])
             birthday = info.birthday.value.strftime("%d.%m.%Y") if hasattr(info,"birthday") else None
             all = f"{name} {address if address else ''} {phones} {birthday if birthday else ''}"

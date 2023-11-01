@@ -84,3 +84,24 @@ class AddressBook(UserDict):
         else:
             res_str = f"No birthdays in the next {count_days} days."
         return res_str
+    
+    def search(self, query):
+        if len(self.data) == 0:
+            return 'Address book is empty'
+
+        if len(query) < 2:
+            return 'Please enter 2 or more characters'
+
+        result = ''
+        for name, info in self.data.items():
+            address = info.address.value.lower() if info.address.value else None
+            phones = ' '.join([p.value for p in info.phones])
+            birthday = info.birthday.value.strftime("%d.%m.%Y") if hasattr(info,"birthday") else None
+            all = f"{name} {address if address else ''} {phones} {birthday if birthday else ''}"
+            if query.lower() in all:
+                result += f'''Contact name: {name}, phones: {phones}{', address: ' + address if address else ''}{', birthday: ' + birthday if birthday else ''}\n'''
+        
+        if len(result) == 0:
+            return 'No results'
+        
+        return result

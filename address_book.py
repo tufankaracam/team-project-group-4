@@ -78,4 +78,9 @@ class AddressBook(UserDict):
                 if delta_days in range(0, count_days):
                     birthdays_dict[birthday].append(user)
         o_birthdays_dict = OrderedDict(sorted(birthdays_dict.items()))
-        return "\n".join([f'{k}: {", ".join(v)}' for k, v in o_birthdays_dict.items() if len(v) > 0])
+        if len(o_birthdays_dict) > 0:
+            res_str = "\n".join(
+                [f'{k}: {", ".join(v)}' for k, v in o_birthdays_dict.items()])
+        else:
+            res_str = f"No birthdays in the next {count_days} days."
+        return res_str

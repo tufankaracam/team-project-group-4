@@ -2,6 +2,7 @@ from address_book import AddressBook
 from birthday import BirthdayFormatError, BirthdayValueError
 from phone import Phone, PhoneFormatError
 from record import Record
+from address import Address, AddressFormatError
 import os
 import platform
 
@@ -94,6 +95,26 @@ def birthdays(contacts: AddressBook):
     return contacts.get_birthdays_per_week()
 
 
+def add_address(args, contacts: AddressBook):
+    try:
+        name = args[0]
+        address = (" ").join(args[1:]).title()
+        contact = contacts.find(name)
+        contact.add_address(address)
+        contacts.save_records()
+        return 'Address added.'
+    except AddressFormatError as e:
+        return e
+    except ValueError:
+        return 'You need to give name and address.'
+
+
+def show_address(args, contacts: AddressBook):
+    name = args[0]
+    contact = contacts.find(name)
+    return contact.show_address()
+
+
 def parseCommands(input):
     if input == '':
         return '', []
@@ -114,8 +135,9 @@ def main():
         'all': {'name': show_all, 'args': False},
         'add-birthday': {'name': add_birthday, 'args': True},
         'show-birthday': {'name': show_birthday, 'args': True},
-        'birthdays': {'name': birthdays, 'args': True}
-
+        'birthdays': {'name': birthdays, 'args': True},
+        'add-address': { 'name': add_address, 'args': True},
+        'show-address': { 'name': show_address, 'args': True},
     }
 
     while (True):

@@ -7,7 +7,6 @@ class BirthdayFormatError(Exception):
     def __init__(self):
         super().__init__('''Birthday format is must be DD.MM.YYYY!''')
 
-
 class BirthdayValueError(Exception):
     def __init__(self):
         super().__init__('''Birthday is not valid.''')

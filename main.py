@@ -48,14 +48,9 @@ def change_contact(args, contacts: AddressBook):
     try:
         name, phone1, phone2 = args
         contact = contacts.find(name)
-        contact.edit_phone(phone1, phone2)
-        for phone in contact.phones:
-            phone1 = Phone(phone1)
-            if phone1.value == phone.value:
-                phone.value = phone2
-                contacts.save_records()
-                return "Phone number updated."
-            return "Phone number not found."
+        result = contact.edit_phone(phone1, phone2)
+        contacts.save_records()
+        return result
     except PhoneFormatError as e:
         return e
 
@@ -135,7 +130,7 @@ def main():
         'all': {'name': show_all, 'args': False},
         'add-birthday': {'name': add_birthday, 'args': True},
         'show-birthday': {'name': show_birthday, 'args': True},
-        'birthdays': {'name': birthdays, 'args': True},
+        'birthdays': {'name': birthdays, 'args': False},
         'add-address': { 'name': add_address, 'args': True},
         'show-address': { 'name': show_address, 'args': True},
     }

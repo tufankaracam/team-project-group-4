@@ -1,5 +1,5 @@
 from address_book import AddressBook
-from birthday import BirthdayFormatError
+from birthday import BirthdayFormatError, BirthdayValueError
 from phone import Phone, PhoneFormatError
 from record import Record
 from address import Address, AddressFormatError
@@ -79,6 +79,8 @@ def add_birthday(args, contacts: AddressBook):
         return 'Birthday added.'
     except BirthdayFormatError as e:
         return e
+    except BirthdayValueError as e:
+        return e
     except ValueError:
         return 'You need to give name and birthday #dd.mm.yyyy'
 
@@ -127,33 +129,34 @@ def main():
     contacts = AddressBook()
 
     methods = {
-        'phone': show_phone,
-        'add': add_contact,
-        'change': change_contact,
-        'all': show_all,
-        'add-birthday': add_birthday,
-        'show-birthday': show_birthday,
-        'birthdays': birthdays,
-        'add-address': add_address,
-        'show-address': show_address,
-
+        'phone': {'name': show_phone, 'args': True},
+        'add': {'name': add_contact, 'args': True},
+        'change': {'name': change_contact, 'args': True},
+        'all': {'name': show_all, 'args': False},
+        'add-birthday': {'name': add_birthday, 'args': True},
+        'show-birthday': {'name': show_birthday, 'args': True},
+        'birthdays': {'name': birthdays, 'args': True},
+        'add-address': { 'name': add_address, 'args': True},
+        'show-address': { 'name': show_address, 'args': True},
     }
 
     while (True):
         cmd, args = parseCommands(input('> '))
-        clear_console()
+        # clear_console()
         if cmd == 'hello':
             print('How can I help you?')
         elif (cmd == 'close' or cmd == 'exit'):
             print('Good bye!')
             break
-        elif cmd in methods:
-            if args:
-                print(methods[cmd](args, contacts))
-            else:
-                print(methods[cmd](contacts))
         else:
-            print('Invalid command.')
+
+            if cmd in methods:
+                if methods[cmd]['args'] == True:
+                    print(methods[cmd]['name'](args, contacts))
+                else:
+                    print(methods[cmd]['name'](contacts))
+            else:
+                print('Invalid command.')
 
 
 if __name__ == '__main__':

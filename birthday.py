@@ -1,10 +1,12 @@
 from field import Field
-import datetime
+from datetime import datetime
 import re
+
 
 class BirthdayFormatError(Exception):
     def __init__(self):
         super().__init__('''Birthday format is must be DD.MM.YYYY!''')
+
 
 class Birthday(Field):
     def __init__(self, value):

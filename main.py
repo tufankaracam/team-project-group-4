@@ -2,8 +2,10 @@ from address_book import AddressBook
 from birthday import BirthdayFormatError
 from phone import Phone, PhoneFormatError
 from record import Record
+from address import Address, AddressFormatError
 import os
 import platform
+
 
 def clear_console():
 
@@ -13,6 +15,7 @@ def clear_console():
         os.system('cls')
     else:
         os.system('clear')
+
 
 def input_error(func):
     def inner(*args, **kwargs):
@@ -90,6 +93,26 @@ def birthdays(contacts: AddressBook):
     return contacts.get_birthdays_per_week()
 
 
+def add_address(args, contacts: AddressBook):
+    try:
+        name = args[0]
+        address = (" ").join(args[1:]).title()
+        contact = contacts.find(name)
+        contact.add_address(address)
+        contacts.save_records()
+        return 'Address added.'
+    except AddressFormatError as e:
+        return e
+    except ValueError:
+        return 'You need to give name and address.'
+
+
+def show_address(args, contacts: AddressBook):
+    name = args[0]
+    contact = contacts.find(name)
+    return contact.show_address()
+
+
 def parseCommands(input):
     if input == '':
         return '', []
@@ -111,6 +134,8 @@ def main():
         'add-birthday': add_birthday,
         'show-birthday': show_birthday,
         'birthdays': birthdays,
+        'add-address': add_address,
+        'show-address': show_address,
 
     }
 

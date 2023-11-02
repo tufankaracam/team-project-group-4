@@ -58,7 +58,16 @@ def change_contact(args, contacts: AddressBook):
         return result
     except PhoneFormatError as e:
         return e
-
+ 
+@input_error
+def delete(args, contacts: AddressBook):
+    try:
+        name = args[0]
+        contacts.delete(name)
+        contacts.save_records()
+        return 'Contact removed'
+    except KeyError:
+            return 'Contact not found'
 
 @input_error
 def show_phone(args, contacts: AddressBook):
@@ -218,6 +227,7 @@ def main():
         'phone': {'name': show_phone, 'obj': contacts},
         'add': {'name': add_contact, 'obj': contacts},
         'change': {'name': change_contact, 'obj': contacts},
+        'delete': {'name': delete, 'obj': contacts},
         'all': {'name': show_all, 'obj': contacts},
         'add-birthday': {'name': add_birthday, 'obj': contacts},
         'show-birthday': {'name': show_birthday, 'obj': contacts},

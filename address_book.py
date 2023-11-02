@@ -107,7 +107,4 @@ class AddressBook(UserDict):
         return result
     
     def __str__(self):
-        if len(self.data) == 0:
-            return 'Address book is empty'
-    
-        return '\n'.join([str(record) for record in self.data.values()])
+        return '\n'.join([str(record) for record in self.data.values()]) if len(self.data) > 0 else 'Address book is empty'

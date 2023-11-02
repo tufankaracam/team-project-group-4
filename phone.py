@@ -1,8 +1,10 @@
 from field import Field
 
+
 class PhoneFormatError(Exception):
     def __init__(self):
-        super().__init__('''Phone number must have 10 numbers and must contain just numbers!''')
+        super().__init__('''Phone number should consist of exactly 10 digits!''')
+
 
 class Phone(Field):
     def __init__(self, value):

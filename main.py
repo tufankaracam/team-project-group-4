@@ -1,10 +1,10 @@
 from address_book import AddressBook
 from notebook import Notebook
 from birthday import BirthdayFormatError, BirthdayValueError
-from phone import Phone, PhoneFormatError
+from phone import PhoneFormatError
 from record import Record
-from address import Address, AddressFormatError, AddressEmptyError
-from ct_email import Email, EmailFormatError
+from address import AddressFormatError, AddressEmptyError
+from ct_email import EmailFormatError
 import os
 import platform
 import difflib
@@ -67,12 +67,7 @@ def show_phone(args, contacts: AddressBook):
 
 
 def show_all(contacts: AddressBook):
-    if len(contacts) == 0:
-        res = 'No contacts yet.'
-    else:
-        res = '\n'.join(
-            [f'{k} ({v.birthday.value.strftime("%d.%m.%Y") if hasattr(v,"birthday") else "No Birthday"}): { ", ".join([phone.value for phone in v.phones])}' for k, v in contacts.items()])
-    return res
+    return str(contacts)
 
 
 def add_birthday(args, contacts: AddressBook):

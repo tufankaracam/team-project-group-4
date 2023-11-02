@@ -74,4 +74,4 @@ class Record:
             return 'Email info not found.'
 
     def __str__(self):
-        return f'''Contact name: {self.name.value}, phones: {'; '.join([p.value for p in self.phones])}'''
+        return f'''Contact name: {self.name.value}, phones: {'; '.join([p.value for p in self.phones])}{', address: ' + self.address.value if hasattr(self, 'address') else ''}{', address: ' + self.email.value if hasattr(self, 'email') else ''}{', birthday: ' + self.birthday.value.strftime("%d.%m.%Y") if hasattr(self, 'birthday') else ''}'''

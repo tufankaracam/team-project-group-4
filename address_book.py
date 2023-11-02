@@ -99,9 +99,15 @@ class AddressBook(UserDict):
             birthday = info.birthday.value.strftime("%d.%m.%Y") if hasattr(info,"birthday") else None
             all = f"{name} {address if address else ''} {phones} {birthday if birthday else ''}"
             if query.lower() in all:
-                result += f'''Contact name: {name}, phones: {phones}{', address: ' + address if address else ''}{', birthday: ' + birthday if birthday else ''}\n'''
-        
+                result += str(info)
+
         if len(result) == 0:
             return 'No results'
         
         return result
+    
+    def __str__(self):
+        if len(self.data) == 0:
+            return 'Address book is empty'
+    
+        return '\n'.join([str(record) for record in self.data.values()])

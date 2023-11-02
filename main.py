@@ -25,13 +25,13 @@ def input_error(func):
         try:
             return func(*args, **kwargs)
         except ValueError:
-            return "Give me name and phone please."
+            return "Give me name and phone please"
         except KeyError:
             return "Contact not found!"
         except IndexError:
             return "Give me name please."
         except TypeError:
-            return "Give me name and phone please."
+            return "Give me name and phone please"
     return inner
 
 
@@ -156,7 +156,7 @@ def add_note(args, notes: Notebook):
 
 
 def update_note(args, notes: Notebook):
-    id, *text,  = args
+    id, *text = args
     return notes.update_note(id, ' '.join(text))
 
 
@@ -173,6 +173,13 @@ def remove_note(args, notes: Notebook):
 def all_notes(notes: Notebook):
     return notes
 
+def add_tags(args, notes: Notebook):
+    id, *tags = args
+    return notes.add_tags(id, tags)
+
+def remove_tag(args, notes: Notebook):
+    id, tag = args
+    return notes.remove_tag(id, tag)
 
 def add_email(args, contacts: AddressBook):
     try:
@@ -242,7 +249,9 @@ def main():
         'update-note': {'name': update_note, 'obj': notes},
         'search-note': {'name': search_note, 'obj': notes},
         'remove-note': {'name': remove_note, 'obj': notes},
-        'all-notes': {'name': all_notes, 'obj': notes}
+        'all-notes': {'name': all_notes, 'obj': notes},
+        'add-tags': {'name': add_tags, 'obj': notes},
+        'remove-tag': {'name': remove_tag, 'obj': notes},
     }
 
     while (True):
@@ -259,7 +268,10 @@ def main():
                     print(methods[cmd]['name'](
                         args, methods[cmd]['obj']))
                 else:
-                    print(methods[cmd]['name'](methods[cmd]['obj']))
+                    try:
+                        print(methods[cmd]['name'](methods[cmd]['obj']))
+                    except TypeError:
+                        print('Please provide full info')
             else:
                 print(check_suggestion(cmd, methods.keys()))
 

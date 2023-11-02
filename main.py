@@ -119,7 +119,7 @@ def birthdays(args, contacts: AddressBook):
 
 def add_address(args, contacts: AddressBook):
     try:
-        name, address = args[0], args[1:]
+        name, *address = args  # args[0], args[1:]
         address_str = (" ").join(address).title()
         contact = contacts.find(name)
         contact.add_address(address_str)

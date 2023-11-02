@@ -43,7 +43,7 @@ class Notebook(UserDict):
         except KeyError:
             return 'Note not found.'
 
-    def update_note(self, new_text, id):
+    def update_note(self, id, new_text):
         try:
             note = self[int(id)]
             note['text'] = new_text

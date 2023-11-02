@@ -7,6 +7,7 @@ from address import Address, AddressFormatError, AddressEmptyError
 from ct_email import Email, EmailFormatError
 import os
 import platform
+import difflib
 
 
 def clear_console():
@@ -29,6 +30,8 @@ def input_error(func):
             return "Contact not found!"
         except IndexError:
             return "Give me name please."
+        except TypeError:
+            return "Give me name and phone please."
     return inner
 
 
@@ -149,8 +152,8 @@ def add_note(args, notes: Notebook):
 
 
 def update_note(args, notes: Notebook):
-    *text, id = args
-    return notes.update_note(' '.join(text), id)
+    id, *text,  = args
+    return notes.update_note(id, ' '.join(text))
 
 
 def search_note(args, notes: Notebook):
@@ -165,6 +168,7 @@ def remove_note(args, notes: Notebook):
 
 def all_notes(notes: Notebook):
     return notes
+
 
 def add_email(args, contacts: AddressBook):
     try:
@@ -192,6 +196,15 @@ def show_email(args, contacts: AddressBook):
         return 'Contact not found.'
 
 
+def check_suggestion(keyword, items):
+    matches = difflib.get_close_matches(keyword, items, n=3)
+
+    if matches:
+        return 'Did you mean\n'+'\n'.join([f'{match}?' for match in matches])
+    else:
+        return "Invalid command."
+
+
 def parseCommands(input):
     if input == '':
         return '', []
@@ -216,10 +229,10 @@ def main():
         'birthdays': {'name': birthdays, 'obj': contacts},
         'add-address': {'name': add_address, 'obj': contacts},
         'show-address': {'name': show_address, 'obj': contacts},
-        'search': { 'name': search, 'obj': contacts},
+        'search': {'name': search, 'obj': contacts},
         'add-email': {'name': add_email, 'obj': contacts},
         'show-email': {'name': show_email, 'obj': contacts},
-      
+
         'add-note': {'name': add_note, 'obj': notes},
         'update-note': {'name': update_note, 'obj': notes},
         'search-note': {'name': search_note, 'obj': notes},
@@ -243,7 +256,7 @@ def main():
                 else:
                     print(methods[cmd]['name'](methods[cmd]['obj']))
             else:
-                print('Invalid command.')
+                print(check_suggestion(cmd, methods.keys()))
 
 
 if __name__ == '__main__':

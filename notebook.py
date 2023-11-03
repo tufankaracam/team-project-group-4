@@ -42,6 +42,8 @@ class Notebook(UserDict):
             return f'Note : {id} removed.'
         except KeyError:
             return 'Note not found.'
+        except ValueError:
+            return 'Invalid note id.'
 
     def update_note(self, id, new_text):
         try:
@@ -51,11 +53,13 @@ class Notebook(UserDict):
             return f'Note : {id} updated.'
         except KeyError:
             return 'Note not found.'
+        except ValueError:
+            return 'Invalid note id.'
 
     def search_note(self, keyword):
         return '\n'.join([f'{str(self[k])}' for k in self if keyword.casefold(
         ) in self[k]["text"].casefold()]) if len(self) > 0 else "No notes were found."
-    
+
     def add_tags(self, id, tags):
         try:
             note = self[int(id)]
@@ -64,7 +68,7 @@ class Notebook(UserDict):
             return f'Tags are added to note {id}.'
         except KeyError:
             return 'Note not found.'
-        
+
     def remove_tag(self, id, tag):
         try:
             note = self[int(id)]
